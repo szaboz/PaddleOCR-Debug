@@ -119,20 +119,28 @@ class DBPostProcess(object):
 
         num_contours = min(len(contours), self.max_candidates)
 
+        print("number of potential boxes: ", num_contours)
+
         boxes = []
         scores = []
         for index in range(num_contours):
             contour = contours[index]
             points, sside = self.get_mini_boxes(contour)
             if sside < self.min_size:
+                print("size too small for " + str(index) + "th box")
                 continue
             points = np.array(points)
             if self.score_mode == "fast":
                 score = self.box_score_fast(pred, points.reshape(-1, 2))
             else:
                 score = self.box_score_slow(pred, contour)
+
+            print("score for " + str(index) + "th box: " + score)
+            print(score + " < " + self.box_thresh)
+
             if self.box_thresh > score:
                 continue
+
 
             box = self.unclip(points, self.unclip_ratio).reshape(-1, 1, 2)
             box, sside = self.get_mini_boxes(box)
@@ -144,6 +152,9 @@ class DBPostProcess(object):
                 np.round(box[:, 0] / width * dest_width), 0, dest_width)
             box[:, 1] = np.clip(
                 np.round(box[:, 1] / height * dest_height), 0, dest_height)
+
+            print("unclipped box: ", box)
+            
             boxes.append(box.astype("int32"))
             scores.append(score)
         return np.array(boxes, dtype="int32"), scores
