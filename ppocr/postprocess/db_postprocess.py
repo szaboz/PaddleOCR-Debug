@@ -17,7 +17,7 @@ https://github.com/WenmuZhou/DBNet.pytorch/blob/master/post_processing/seg_detec
 """
 from __future__ import absolute_import
 from __future__ import division
-from __future__ import logger.info_function
+from __future__ import print_function
 
 import numpy as np
 import cv2
