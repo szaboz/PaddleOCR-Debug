@@ -125,7 +125,7 @@ class DBPostProcess(object):
 
         num_contours = min(len(contours), self.max_candidates)
 
-        logger.info("number of potential boxes: ", num_contours)
+        logger.info("number of potential boxes before filtering: " + str(num_contours))
 
         boxes = []
         scores = []
@@ -141,8 +141,8 @@ class DBPostProcess(object):
             else:
                 score = self.box_score_slow(pred, contour)
 
-            logger.info("score for " + str(index) + "th box: " + score)
-            logger.info(score + " < " + self.box_thresh)
+            logger.info("score for " + str(index) + "th box: " + str(score))
+            logger.info(str(score) + " < " + str(self.box_thresh))
 
             if self.box_thresh > score:
                 continue
@@ -159,7 +159,7 @@ class DBPostProcess(object):
             box[:, 1] = np.clip(
                 np.round(box[:, 1] / height * dest_height), 0, dest_height)
 
-            logger.info("unclipped box: ", box)
+            logger.info("unclipped box: " + str(box))
             
             boxes.append(box.astype("int32"))
             scores.append(score)
@@ -252,9 +252,11 @@ class DBPostProcess(object):
             else:
                 mask = segmentation[batch_index]
             if self.box_type == 'poly':
+                logger.info("It is poly")
                 boxes, scores = self.polygons_from_bitmap(pred[batch_index],
                                                           mask, src_w, src_h)
             elif self.box_type == 'quad':
+                logger.info("It is quad")
                 boxes, scores = self.boxes_from_bitmap(pred[batch_index], mask,
                                                        src_w, src_h)
             else:
