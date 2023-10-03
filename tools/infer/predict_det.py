@@ -262,6 +262,7 @@ class TextDetector(object):
             preds['f_tco'] = outputs[2]
             preds['f_tvo'] = outputs[3]
         elif self.det_algorithm in ['DB', 'PSE', 'DB++']:
+            logger.info("DB")
             preds['maps'] = outputs[0]
         elif self.det_algorithm == 'FCE':
             for i, output in enumerate(outputs):

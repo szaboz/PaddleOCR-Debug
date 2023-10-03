@@ -17,7 +17,7 @@ https://github.com/WenmuZhou/DBNet.pytorch/blob/master/post_processing/seg_detec
 """
 from __future__ import absolute_import
 from __future__ import division
-from __future__ import print_function
+from __future__ import logger.info_function
 
 import numpy as np
 import cv2
@@ -58,7 +58,7 @@ class DBPostProcess(object):
 
         self.dilation_kernel = None if not use_dilation else np.array(
             [[1, 1], [1, 1]])
-        logger.info("It is DBPostProcess")
+        
 
     def polygons_from_bitmap(self, pred, _bitmap, dest_width, dest_height):
         '''
@@ -125,7 +125,7 @@ class DBPostProcess(object):
 
         num_contours = min(len(contours), self.max_candidates)
 
-        print("number of potential boxes: ", num_contours)
+        logger.info("number of potential boxes: ", num_contours)
 
         boxes = []
         scores = []
@@ -133,7 +133,7 @@ class DBPostProcess(object):
             contour = contours[index]
             points, sside = self.get_mini_boxes(contour)
             if sside < self.min_size:
-                print("size too small for " + str(index) + "th box")
+                logger.info("size too small for " + str(index) + "th box")
                 continue
             points = np.array(points)
             if self.score_mode == "fast":
@@ -141,8 +141,8 @@ class DBPostProcess(object):
             else:
                 score = self.box_score_slow(pred, contour)
 
-            print("score for " + str(index) + "th box: " + score)
-            print(score + " < " + self.box_thresh)
+            logger.info("score for " + str(index) + "th box: " + score)
+            logger.info(score + " < " + self.box_thresh)
 
             if self.box_thresh > score:
                 continue
@@ -159,7 +159,7 @@ class DBPostProcess(object):
             box[:, 1] = np.clip(
                 np.round(box[:, 1] / height * dest_height), 0, dest_height)
 
-            print("unclipped box: ", box)
+            logger.info("unclipped box: ", box)
             
             boxes.append(box.astype("int32"))
             scores.append(score)
@@ -235,6 +235,7 @@ class DBPostProcess(object):
         return cv2.mean(bitmap[ymin:ymax + 1, xmin:xmax + 1], mask)[0]
 
     def __call__(self, outs_dict, shape_list):
+        logger.info("It is DBPostProcess")
         pred = outs_dict['maps']
         if isinstance(pred, paddle.Tensor):
             pred = pred.numpy()
