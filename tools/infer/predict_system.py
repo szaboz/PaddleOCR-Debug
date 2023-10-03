@@ -65,12 +65,13 @@ class TextSystem(object):
         self.crop_image_res_index += bbox_num
 
     def __call__(self, img, cls=True):
+        logger.info("Predicting image...")
         time_dict = {'det': 0, 'rec': 0, 'csl': 0, 'all': 0}
         start = time.time()
         ori_im = img.copy()
         dt_boxes, elapse = self.text_detector(img)
         time_dict['det'] = elapse
-        logger.debug("dt_boxes num : {}, elapse : {}".format(
+        logger.info("dt_boxes num : {}, elapse : {}".format(
             len(dt_boxes), elapse))
         if dt_boxes is None:
             return None, None

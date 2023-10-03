@@ -24,6 +24,9 @@ import cv2
 import paddle
 from shapely.geometry import Polygon
 import pyclipper
+import logging
+from ppocr.utils.logging import get_logger
+logger = get_logger()
 
 
 class DBPostProcess(object):
@@ -53,6 +56,7 @@ class DBPostProcess(object):
 
         self.dilation_kernel = None if not use_dilation else np.array(
             [[1, 1], [1, 1]])
+        logger.info("It is DBPostProcess")
 
     def polygons_from_bitmap(self, pred, _bitmap, dest_width, dest_height):
         '''

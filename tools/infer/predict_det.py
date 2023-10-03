@@ -24,7 +24,7 @@ import cv2
 import numpy as np
 import time
 import sys
-
+import logging
 import tools.infer.utility as utility
 from ppocr.utils.logging import get_logger
 from ppocr.utils.utility import get_image_file_list, check_and_read
@@ -135,7 +135,7 @@ class TextDetector(object):
         else:
             logger.info("unknown det_algorithm:{}".format(self.det_algorithm))
             sys.exit(0)
-
+        logger.info("postprocess_params for det", postprocess_params)
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
         self.predictor, self.input_tensor, self.output_tensors, self.config = utility.create_predictor(
