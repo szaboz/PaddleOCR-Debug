@@ -540,7 +540,8 @@ class PaddleOCR(predict_system.TextSystem):
             logger.warning(
                 'Since the angle classifier is not initialized, the angle classifier will not be uesd during the forward process'
             )
-
+        logger.info("Logging is active")
+        print("Printing is active")
         img = check_img(img)
         # for infer pdf file
         if isinstance(img, list):
