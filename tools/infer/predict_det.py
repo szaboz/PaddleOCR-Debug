@@ -36,6 +36,8 @@ logger = get_logger()
 
 class TextDetector(object):
     def __init__(self, args):
+        if not args.show_log:
+            logger.setLevel(logging.INFO)
         self.args = args
         self.det_algorithm = args.det_algorithm
         self.use_onnx = args.use_onnx
@@ -220,7 +222,7 @@ class TextDetector(object):
     def __call__(self, img):
         ori_im = img.copy()
         data = {'image': img}
-
+        logger.info("predict_det pre_process begin")
         st = time.time()
 
         if self.args.benchmark:

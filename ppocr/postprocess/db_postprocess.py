@@ -43,6 +43,8 @@ class DBPostProcess(object):
                  score_mode="fast",
                  box_type='quad',
                  **kwargs):
+        if not args.show_log:
+            logger.setLevel(logging.INFO)
         self.thresh = thresh
         self.box_thresh = box_thresh
         self.max_candidates = max_candidates
